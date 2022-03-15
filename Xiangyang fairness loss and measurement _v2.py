@@ -1,11 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
 
-# # Dynamic-DeepHit Tutorial
+
+# # Dynamic-DeepHit 
 # 
 # 
 
-# In[1]:
 
 
 _EPSILON = 1e-08
@@ -27,7 +25,6 @@ from utils_log import save_logging, load_logging
 from utils_helper import f_get_minibatch, f_get_boosted_trainset
 
 
-# In[2]:
 
 
 def _f_get_pred(sess, model, data, data_mi, pred_horizon):
@@ -77,7 +74,6 @@ def f_get_risk_predictions(sess, model, data_, data_mi_, pred_time, eval_time):
     return risk_all #CIF
 
 
-# In[3]:
 
 
 import numpy as np
@@ -487,7 +483,6 @@ class Model_Longitudinal_Attention:
         return self.sess.run([self.z_mean, self.z_std], feed_dict={self.x: x_test, self.x_mi: x_mi_test, self.mb_size: np.shape(x_test)[0], self.keep_prob: keep_prob})
 
 
-# In[4]:
 
 
 scale=0.01
@@ -684,7 +679,6 @@ save_logging(new_parser, log_name)
 
 # ### 3. Split Dataset into Train/Valid/Test Sets
 
-# In[11]:
 
 
 ### TRAINING-TESTING SPLIT
@@ -779,7 +773,6 @@ for itr in range(iteration): #run 25000 times
 
 # # New loss
 
-# In[221]:
 
 
 scale=0.01
@@ -861,7 +854,6 @@ for itr in range(iteration): #run 25000 times
 
 # # result from new loss
 
-# In[222]:
 
 
 saver.restore(sess, file_path + '/model')
@@ -912,7 +904,6 @@ print('========================================================')
 
 # # result from original loss
 
-# In[10]:
 
 
 saver.restore(sess, file_path + '/model')
@@ -963,7 +954,6 @@ print('========================================================')
 
 # # result from bxR_LOSS
 
-# In[34]:
 
 
 saver.restore(sess, file_path + '/model')
@@ -1014,26 +1004,22 @@ print('========================================================')
 
 # # Individual Fairness Measure & with New Loss
 
-# In[243]:
 
 
 prediction=f_get_risk_predictions(sess, model, te_data, te_data_mi, pred_time, eval_time) #risk_all CIF
 prediction[0].shape
 
 
-# In[ ]:
 
 
 
 
 
-# In[244]:
 
 
 #question: what is pred_time what is eval_time
 
 
-# In[245]:
 
 
 #%%Individual fairness measure:
@@ -1075,7 +1061,6 @@ def individual_fairness_scale(prediction,X, scale):
     return R_beta_avg
 
 
-# In[247]:
 
 
 # data normalization: mean subtraction method to compute euclidean distance
@@ -1086,7 +1071,6 @@ scaler.fit(te_data[:,0]) #patient's first time point
 data_X_test = scaler.transform(te_data[:,0])
 
 
-# In[248]:
 
 
 # #%% fairness measures
@@ -1095,7 +1079,6 @@ data_X_test_for_distance = data_X_test #两个人的distance
 data_X_test_for_distance = data_X_test_for_distance / np.linalg.norm(data_X_test_for_distance,axis=1,keepdims=1)
 
 
-# In[249]:
 
 
 scale_measure = 0.01                                   #data distance at the first time between 2 patients
@@ -1103,7 +1086,6 @@ R_beta_scale = individual_fairness_scale(prediction[0][:,0,0],data_X_test_for_di
 print(f"average individual fairness metric with scale={scale_measure: .4f}: {R_beta_scale: .4f}")
 
 
-# In[230]:
 
 
 scale_measure = 0.01                                   #data distance at the first time between 2 patients
@@ -1111,7 +1093,6 @@ R_beta_scale = individual_fairness_scale(prediction[1][:,0,0],data_X_test_for_di
 print(f"average individual fairness metric with scale={scale_measure: .4f}: {R_beta_scale: .4f}")
 
 
-# In[231]:
 
 
 #scale_measure = 0.01                                   #data distance at the first time between 2 patients
@@ -1119,7 +1100,6 @@ print(f"average individual fairness metric with scale={scale_measure: .4f}: {R_b
 #print(f"average individual fairness metric with scale={scale_measure: .4f}: {R_beta_scale: .4f}")
 
 
-# In[232]:
 
 
 prediction[0][:,0,0].shape
@@ -1133,7 +1113,6 @@ data_X_test_for_distance.shape
 
 # # patient other  time points
 
-# In[234]:
 
 
 #scaler = StandardScaler()
@@ -1141,7 +1120,6 @@ data_X_test_for_distance.shape
 #data_X_test = scaler.transform(te_data[:,10])
 
 
-# In[235]:
 
 
 # #%% fairness measures
@@ -1150,7 +1128,6 @@ data_X_test_for_distance.shape
 #data_X_test_for_distance = data_X_test_for_distance / np.linalg.norm(data_X_test_for_distance,axis=1,keepdims=1)
 
 
-# In[236]:
 
 
 #scale_measure = 0.01                                   #data distance at the first time between 2 patients
@@ -1158,7 +1135,6 @@ data_X_test_for_distance.shape
 #print(f"average individual fairness metric with scale={scale_measure: .4f}: {R_beta_scale: .4f}")
 
 
-# In[237]:
 
 
 for i in range(16):
@@ -1173,7 +1149,6 @@ for i in range(16):
 
 # # Sensitivity test
 
-# In[238]:
 
 
 s=[1,0.1,0.01,0.001,0.0001,0.00001]
@@ -1191,7 +1166,6 @@ for j in s:
         print(f"average individual fairness metric with scale={scale_measure: .5f} at No.{i+1} patient measurement time point: {R_beta_scale: .4f}")
 
 
-# In[99]:
 
 
 a=[0.0000,0.0000,0.0001,0.0001,0.0002,0.0006,0.0009,0.0010,0.0015,0.0020,0.0026,0.0028,0.0030,0.0032,0.0034,0.0000] #1
@@ -1202,7 +1176,6 @@ d=[0.0029,0.0029,0.0029,0.0029,0.0029,0.0030,0.0030,0.0030,0.0031,0.0032,0.0033,
 e=[0.0035,0.0035,0.0035,0.0035,0.0035,0.0035,0.0035,0.0035,0.0035,0.0035,0.0035,0.0036,0.0036,0.0036,0.0036,0.0000] #0.0001
 
 
-# In[100]:
 
 
 from matplotlib import pyplot as plt
@@ -1222,7 +1195,6 @@ plt.legend()
 scale=0.01
 
 
-# In[251]:
 
 
 #%%Individual fairness measure:
@@ -1287,67 +1259,56 @@ print(df1)
 # print('========================================================')
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
 
 
-# In[ ]:
 
 
 
