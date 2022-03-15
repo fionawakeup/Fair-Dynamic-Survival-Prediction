@@ -1,6 +1,6 @@
 
 
-# # Dynamic-DeepHit 
+# # individual fairness added to Dynamic-DeepHit 
 # 
 # 
 
