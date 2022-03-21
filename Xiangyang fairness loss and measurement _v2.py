@@ -1,6 +1,6 @@
 
 
-# # individual fairness added to Dynamic-DeepHit 
+# # individual fairness added to Dynamic-DeepHit (https://github.com/chl8856/Dynamic-DeepHit/blob/master/tutorial.ipynb)
 # 
 # 
 
